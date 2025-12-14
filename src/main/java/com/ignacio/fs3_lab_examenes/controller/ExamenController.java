@@ -1,6 +1,7 @@
 package com.ignacio.fs3_lab_examenes.controller;
 
 import com.ignacio.fs3_lab_examenes.model.Examen;
+import com.ignacio.fs3_lab_examenes.model.ExamenDetalleDTO;
 import com.ignacio.fs3_lab_examenes.service.ExamenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,18 @@ public class ExamenController {
     private ExamenService service;
 
     @GetMapping
-    public List<Examen> getAll() {
-        return service.findAll();
+    public List<ExamenDetalleDTO> getAll() {
+        return service.findAllDetalles();
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public List<ExamenDetalleDTO> getByUsuarioId(@PathVariable Long usuarioId) {
+        return service.findByUsuarioIdDetalles(usuarioId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Examen> getById(@PathVariable Long id) {
-        return service.findById(id)
+    public ResponseEntity<ExamenDetalleDTO> getById(@PathVariable Long id) {
+        return service.findByIdDetalles(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResourceNotFoundException("Examen no encontrado con id: " + id));
     }
