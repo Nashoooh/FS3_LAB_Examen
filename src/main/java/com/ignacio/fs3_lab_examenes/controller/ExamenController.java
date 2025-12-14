@@ -23,7 +23,7 @@ public class ExamenController {
     public ResponseEntity<Examen> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Examen no encontrado con id: " + id));
     }
 
     @PostMapping
@@ -36,12 +36,12 @@ public class ExamenController {
         return service.findById(id).map(e -> {
             examen.setId(id);
             return ResponseEntity.ok(service.save(examen));
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElseThrow(() -> new ResourceNotFoundException("Examen no encontrado con id: " + id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!service.findById(id).isPresent()) return ResponseEntity.notFound().build();
+        if (!service.findById(id).isPresent()) throw new ResourceNotFoundException("Examen no encontrado con id: " + id);
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
